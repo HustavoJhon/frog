@@ -279,6 +279,7 @@ fi
 # echo -e "               ${c6}󰊠 ${c3}|$(get_storage_info)"
 
 # ================================================================================
+clear # clear screen
 
 echo -e "   ${c7}󰌠 ${c7}         ${c4}󰏘 ${c4}    ${c3}${c6}󰮯 |$(get_distro_name) $(uname -m)"
 echo -e "${c3}   _        @..@    ${c3}${c5}󰊠 |$(uname -r)"
