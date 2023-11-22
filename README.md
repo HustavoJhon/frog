@@ -21,7 +21,7 @@ $ git clone https://github.com/HustavoJhon/frog.git
 # cd into frog
 $ cd frog
 # copy the fonts
-$cp ttf-material-design-icons/* $HOME/.local/share/fonts
+$ cp ttf-material-design-icons/* $HOME/.local/share/fonts
 # update fontconfig
 $ fc-cache -fv
 $ run frog
