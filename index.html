@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendario del Amor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      transition: background-image 1s ease-in-out;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .glass {
+      backdrop-filter: blur(12px);
+      background-color: rgba(0, 128, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .special-day {
+      animation: pulse 2s infinite;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.8s ease-out;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+  <!-- Notificación de cumpleaños -->
+  <div id="birthdayMessage" class="hidden fixed top-6 left-1/2 transform -translate-x-1/2 bg-green-800/80 text-white px-6 py-4 rounded-xl shadow-xl z-50 text-center max-w-md glass backdrop-blur-md">
+    <p class="text-lg font-semibold">FELI CUM</p>
+    <p id="birthdayText" class="text-sm mt-1">Feliz cumpleaños ranita..</p>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="glass p-6 rounded-2xl shadow-2xl w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-4 text-white z-10">
+    <!-- Calendario -->
+    <div class="md:col-span-2">
+      <h1 class="text-4xl font-bold mb-4 text-green-200">Calendario 🐧🐸</h1>
+      <div id="calendar" class="grid grid-cols-7 gap-2 mb-6"></div>
+    </div>
+
+    <!-- Frases especiales -->
+    <div>
+      <h2 class="text-2xl font-semibold mb-4 text-green-300">Nuestros Mensajes</h2>
+      <ul id="phrases" class="space-y-3 text-left text-sm max-h-[500px] overflow-y-auto pr-2"></ul>
+    </div>
+  </div>
+
+  <!-- Spotify Reproductor -->
+  <div class="fixed bottom-4 right-4 w-full max-w-md p-4 rounded-2xl shadow-xl glass z-50">
+    <div class="flex items-center gap-3">
+      <a href="https://open.spotify.com/playlist/6GeeCcFnMOLiWtFwyR07fz?utm_source=generator" target="_blank" title="Escucha en Spotify">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg" alt="Spotify Logo" class="w-10 h-10 hover:scale-105 transition-transform duration-300">
+      </a>
+      <iframe
+        style="border-radius:12px"
+        src="https://open.spotify.com/embed/playlist/6GeeCcFnMOLiWtFwyR07fz?utm_source=generator&autoplay=1"
+        width="100%"
+        height="80"
+        frameBorder="0"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"
+        class="rounded-xl flex-1"
+      ></iframe>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    const imagePaths = [
+      'assets/img/fot1.jpeg',
+      'assets/img/fot2.jpeg',
+      'assets/img/fot3.jpeg',
+      'assets/img/fot4.jpeg',
+      'assets/img/fot5.jpeg',
+      'assets/img/fot6.jpeg',
+    ];
+
+    let currentImage = 0;
+    function cycleBackground() {
+      document.body.style.backgroundImage = `url('${imagePaths[currentImage]}')`;
+      currentImage = (currentImage + 1) % imagePaths.length;
+    }
+    setInterval(cycleBackground, 8000);
+    window.onload = cycleBackground;
+
+    const eventJSON = {
+      "events": [
+        {"title": "Aniversario 💚", "date": "every 5th", "description": "Feli aniversario", "icon": "☀️"},
+        {"title": "Cumpleaños de Gustavo 🎉", "date": "02-11", "description": "Feliz cumpleaños! 🐧", "icon": "🐧"},
+        {"title": "Cumpleaños de Ranita 🐸", "date": "04-23", "description": "Feliz cumpleaños ranita, TE AMOUUUUU", "icon": "🐸"}
+      ]
+    };
+
+    const phrases = [
+      { date: '2024-01-15', sender: 'ranita', text: 'me gustas tal como eres' },
+      { date: '2024-01-18', sender: 'ranita', text: 'Fuck tbm soñe contigo' },
+      { date: '2024-02-01', sender: 'ponwino', text: 'pt si muero cualquier cosa me gustas mucho cmt' },
+      { date: '2024-02-08', sender: 'ponwino', text: 'parte de te amo chiquita xddd' },
+      { date: '2024-02-15', sender: 'ranita', text: 'yo queria ir contigo oe ctmr xd' },
+      { date: '2024-03-01', sender: 'ranita', text: 'me gustaria ver pelis contigo xdd' },
+      { date: '2024-04-17', sender: 'ponwino', text: 'tan gozu mi amorcito?' },
+      { date: '2024-04-26', sender: 'ponwino', text: 'te amo chiquita' },
+      { date: '2024-04-30', sender: 'ponwino', text: 'hasta soñe contigo' },
+      { date: '2024-05-01', sender: 'ponwino', text: 'si me desmayo facil sueño contigo ps' }
+    ];
+
+    const calendar = document.getElementById('calendar');
+    const phrasesList = document.getElementById('phrases');
+
+    function renderCalendar() {
+      const today = new Date();
+      const currentMonth = today.getMonth();
+      const currentYear = today.getFullYear();
+      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+      calendar.innerHTML = '';
+      for (let i = 0; i < firstDay; i++) {
+        calendar.innerHTML += '<div></div>';
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        let isSpecial = false;
+        let todayStr = `${String(currentMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        let content = `<div class="p-2 rounded-lg text-center border ${day === today.getDate() ? 'bg-green-300 font-bold' : 'bg-white/10'}`;
+
+        eventJSON.events.forEach(event => {
+          if ((event.date === todayStr) || (event.date === "every 5th" && day === 5)) {
+            isSpecial = true;
+            content += ' special-day';
+            setTimeout(() => {
+              if (todayStr === `${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`) {
+                const birthdayBox = document.getElementById('birthdayMessage');
+                const birthdayText = document.getElementById('birthdayText');
+                birthdayText.innerText = event.description;
+                birthdayBox.classList.remove('hidden');
+                birthdayBox.classList.add('animate-fade-in');
+                setTimeout(() => {
+                  birthdayBox.classList.add('hidden');
+                }, 8000);
+              }
+            }, 500);
+            content += `">${day}<br>${event.icon}`;
+          }
+        });
+
+        if (!isSpecial) content += `">${day}`;
+        content += '</div>';
+        calendar.innerHTML += content;
+      }
+    }
+
+    function renderPhrases() {
+      phrasesList.innerHTML = '';
+      phrases.forEach(p => {
+        phrasesList.innerHTML += `<li class='bg-green-800/20 p-2 rounded'><span class='text-green-200'>${p.date}</span> <strong>${p.sender}:</strong> "${p.text}"</li>`;
+      });
+    }
+
+    renderCalendar();
+    renderPhrases();
+  </script>
+</body>
+</html>
